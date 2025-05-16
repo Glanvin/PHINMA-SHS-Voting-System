@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<resources>
+    <string name = "app_name">SHS Voting System</string>
+    <string name = "dummy_text">Hello World</string>
+
+    <string name="submit">Submit</string>
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="vote">Vote</string>
+    <string name="cancel_vote">Cancel Vote</string>
+    <string name="confirm_cancel_vote">Are you sure you want to cancel your vote?</string>
+    <string name="confirm_vote">I confirm that the selected candidates are correct.</string>"
+
+    <string name="school_id">School ID</string>
+
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="forgot_password">Forgot Password</string>
+
+
+    <string name = "student_body_officer">Student Body Officer</string>
+    <string name = "student_strand_officer">Student Strand Officer</string>
+
+    <string name = "governor">Governor</string>
+    <string name = "vice_governor">Vice Governor</string>
+    <string name = "mayor">Mayor</string>
+    <string name = "vice_mayor">Vice Mayor</string>
+
+    <string name = "secretary">Secretary</string>
+    <string name = "treasurer">Treasurer</string>
+    <string name = "auditor">Auditor</string>
+    <string name = "pio_internal">P.I.O Internal</string>
+    <string name = "pio_external">P.I.O External</string>
+    <string name = "representative">Representative</string>
+
+    <string name = "student">Student</string>
+    <string name = "faculty">Faculty</string>
+    <string name = "admin">Admin</string>
+
+    <string name="email_mismatch">Email doesn't match</string>
+    <string name="password_mismatch">Password doesn't match</string>
+    <string name="schoolId_mismatch">School ID doesn't match</string>
+</resources>
