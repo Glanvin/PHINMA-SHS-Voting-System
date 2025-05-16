@@ -5,6 +5,8 @@ sealed interface SignInAction {
     data object SignIn: SignInAction
     data object ForgotPassword: SignInAction
     data object TogglePasswordVisibility: SignInAction
+    data object OnNavigateNext: SignInAction
+    data object OnNavigateForgotPassword: SignInAction
     data class Email(val email: String): SignInAction
     data class Password(val password: String): SignInAction
 }

@@ -8,11 +8,13 @@ import io.github.glavin.votingsystem.features.auth.domain.Auth
 import io.github.glavin.votingsystem.features.auth.domain.AuthDataStoreRepository
 import io.github.glavin.votingsystem.features.auth.domain.UserProfile
 import io.github.glavin.votingsystem.features.auth.domain.UserRepository
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -24,12 +26,15 @@ class SignInViewModel(
     private val dataStoreRepository: AuthDataStoreRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(SignInState())
+    private var _state = MutableStateFlow(SignInState())
     val state: StateFlow<SignInState> = _state
         .onStart {
             checkSessionExisting()
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SignInState())
+
+    private val _event: Channel<SignInAction> = Channel()
+    val event = _event.receiveAsFlow()
 
 
     fun onAction(action: SignInAction) {
@@ -55,7 +60,6 @@ class SignInViewModel(
                     )
                 }
             }
-
             else -> {}
         }
     }
@@ -72,12 +76,11 @@ class SignInViewModel(
                 result.fold(
                     onSuccess = { auth ->
                         dataStoreRepository.saveSessionToken(auth.sessionToken)
+                        snackbarController.sendEvent(SnackbarEvent("Successfully Signed In!"))
                         onAuthenticationSuccess(auth)
                     },
                     onFailure = {
-                        snackbarController.sendEvent(
-                            SnackbarEvent(message = "Credentials are incorrect, Please check your credentials")
-                        )
+                        snackbarController.sendEvent(SnackbarEvent("Invalid Credentials!"))
                     }
                 )
             }.onFailure {
@@ -90,8 +93,10 @@ class SignInViewModel(
     private suspend fun checkSessionExisting() {
         dataStoreRepository.readSessionToken().collectLatest { session ->
             if (session.isNotEmpty()) {
+                _state.update { it.copy(isLoading = true) }
                 val success = signInWithToken(sessionToken = session)
                 if (success) {
+                    _event.send(SignInAction.OnNavigateNext)
                     _state.update { it.copy(isLoading = false, isAuthenticated = true) }
                 }
             } else {
@@ -141,13 +146,13 @@ class SignInViewModel(
 
     private suspend fun onAuthenticationSuccess(auth: Auth) {
         _state.update { it.copy(isLoading = false, isAuthenticated = true) }
-        clearFields()
         getUser(auth).fold(
             onSuccess = {
                 val firstName = it.firstName.split(" ")[0]
                 snackbarController.sendEvent(
                     SnackbarEvent(message = "Sign In Successfully, Hello, $firstName")
                 )
+                clearFields()
             },
             onFailure = {
                 snackbarController.sendEvent(

@@ -11,7 +11,7 @@ data class SignInState(
     val isPasswordValid: Boolean = true
 ) {
 
-    val isNotEmailValid: Boolean get() = !isEmailValid && email.isNotEmpty()
-    val isNotPasswordValid: Boolean get() = !isPasswordValid && password.isNotEmpty()
-    val canSignIn: Boolean get() = email.isNotEmpty() && password.isNotEmpty() && isEmailValid && isPasswordValid
+    val isNotEmailValid: Boolean = !isEmailValid && email.isNotEmpty()
+    val isNotPasswordValid: Boolean = !isPasswordValid && password.isNotEmpty()
+    val canSignIn: Boolean = email.isNotEmpty() && password.isNotEmpty() && isEmailValid && isPasswordValid
 }

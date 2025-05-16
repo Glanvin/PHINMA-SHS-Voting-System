@@ -2,7 +2,6 @@ package io.github.glavin.votingsystem
 
 import androidx.compose.runtime.remember
 import androidx.compose.ui.window.ComposeUIViewController
-import io.github.glavin.votingsystem.core.data.local.ChiroDataStore
 import io.github.glavin.votingsystem.core.data.local.createDataStore
 import io.github.glavin.votingsystem.di.initKoin
 
@@ -11,8 +10,5 @@ fun MainViewController() = ComposeUIViewController(
         initKoin()
     }
 ) { App(
-    dynamicColor = false,
-    prefs = remember {
-        ChiroDataStore.createDataStore()
-    }
+    dynamicColor = false
 ) }
