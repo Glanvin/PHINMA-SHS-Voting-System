@@ -192,7 +192,7 @@ class SignInViewModel(
                 snackbarController.sendEvent(
                     SnackbarEvent(message = "Sign In Successfully, Hello, $firstName")
                 )
-                clearFields()
+                resetCredentials()
             },
             onFailure = {
                 snackbarController.sendEvent(
