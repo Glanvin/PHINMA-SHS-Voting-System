@@ -46,7 +46,12 @@ fun PasswordOutlinedTextField(
         ),
         trailingIcon = { PasswordVisibilityButton(password, isPasswordVisible, onTogglePasswordVisibility) },
         visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-        isError = isError
+        isError = isError,
+        supportingText = {
+            if (isError) {
+                Text(text = "Invalid Password")
+            }
+        }
     )
 }
 

@@ -8,16 +8,22 @@ import io.github.glavin.votingsystem.features.auth.domain.Auth
 import io.github.glavin.votingsystem.features.auth.domain.AuthDataStoreRepository
 import io.github.glavin.votingsystem.features.auth.domain.UserProfile
 import io.github.glavin.votingsystem.features.auth.domain.UserRepository
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.ExperimentalUuidApi
 
 class SignInViewModel(
@@ -26,10 +32,14 @@ class SignInViewModel(
     private val dataStoreRepository: AuthDataStoreRepository
 ) : ViewModel() {
 
-    private var _state = MutableStateFlow(SignInState())
+    private var emailJob: Job? = null
+    private val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})".toRegex()
+    private val domains = listOf("phinmaed.com")
+
+    private val _state = MutableStateFlow(SignInState())
     val state: StateFlow<SignInState> = _state
         .onStart {
-            checkSessionExisting()
+            observeEmailChanges()
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SignInState())
 
@@ -41,26 +51,19 @@ class SignInViewModel(
         when (action) {
             is SignInAction.SignIn -> signIn()
             is SignInAction.TogglePasswordVisibility -> togglePasswordVisibility()
-            is SignInAction.Email -> {
-                _state.update {
-                    it.copy(email = action.email)
-                }
-            }
-
-            is SignInAction.Password -> {
-                _state.update {
-                    it.copy(password = action.password)
-                }
-            }
-
+            is SignInAction.Password -> _state.update { it.copy(password = action.password,) }
+            is SignInAction.Email -> _state.update { it.copy(email = action.email,) }
             is SignInAction.ForgotPassword -> {
-                _state.update {
-                    it.copy(
-                        forgotPassword = true
-                    )
-                }
+                _state.update { it.copy(forgotPassword = true) }
+                forgetPassword()
             }
             else -> {}
+        }
+    }
+
+    private fun forgetPassword() {
+        viewModelScope.launch {
+            _event.send(SignInAction.OnNavigateForgotPassword)
         }
     }
 
@@ -78,6 +81,7 @@ class SignInViewModel(
                         dataStoreRepository.saveSessionToken(auth.sessionToken)
                         snackbarController.sendEvent(SnackbarEvent("Successfully Signed In!"))
                         onAuthenticationSuccess(auth)
+                        _event.send(SignInAction.OnNavigateNext)
                     },
                     onFailure = {
                         snackbarController.sendEvent(SnackbarEvent("Invalid Credentials!"))

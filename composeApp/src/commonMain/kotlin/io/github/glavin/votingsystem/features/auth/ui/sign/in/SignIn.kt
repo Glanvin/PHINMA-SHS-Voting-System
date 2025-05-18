@@ -1,5 +1,6 @@
 package io.github.glavin.votingsystem.features.auth.ui.sign.`in`
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -54,7 +55,7 @@ fun SignInScreenRoot(
     val event by viewModel.event.collectAsState(SignInAction.Idle)
     val scope = rememberCoroutineScope()
 
-    SignInScreenContent(
+    SignInScreen(
         state = state,
         scope = scope,
         event = event,
@@ -65,7 +66,7 @@ fun SignInScreenRoot(
 }
 
 @Composable
-private fun SignInScreenContent(
+private fun SignInScreen(
     state: SignInState,
     scope: CoroutineScope,
     event: SignInAction,
@@ -74,9 +75,8 @@ private fun SignInScreenContent(
     onForgetPassword: () -> Unit
 ) {
     val windowWidthSizeClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val enabled = !state.isLoading && state.email.isNotBlank() && state.password.isNotBlank()
 
     ObserveAsEvents(
         flow = SnackbarController.snackbarEvents
@@ -131,7 +131,7 @@ private fun SignInScreenContent(
                         .width(320.dp)
                         .heightIn(min = 55.dp),
                     enabled = !state.isLoading,
-                    isError = state.isNotEmailValid
+                    isError = state.isEmailInvalid
                 )
 
                 Spacer(modifier = Modifier.height(25.dp))
@@ -145,7 +145,7 @@ private fun SignInScreenContent(
                     enabled = !state.isLoading,
                     isPasswordVisible = state.isPasswordVisible,
                     onTogglePasswordVisibility = { onAction(SignInAction.TogglePasswordVisibility) },
-                    isError = state.isNotPasswordValid
+                    isError = state.isPasswordInvalid
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

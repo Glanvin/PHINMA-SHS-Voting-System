@@ -35,6 +35,11 @@ fun EmailOutlinedTextField(
             keyboardType = KeyboardType.Email,
             imeAction = if(email.isNotEmpty()) ImeAction.Next else ImeAction.Done
         ),
-        isError = isError
+        isError = isError,
+        supportingText = {
+            if (isError) {
+                Text(text = "Invalid Email")
+            }
+        }
     )
 }
