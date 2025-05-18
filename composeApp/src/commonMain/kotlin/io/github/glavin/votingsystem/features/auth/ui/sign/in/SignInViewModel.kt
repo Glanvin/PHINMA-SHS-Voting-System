@@ -116,8 +116,7 @@ class SignInViewModel(
                     onAuthenticationSuccess(auth)
                 },
                 onFailure = {
-                    onAuthenticationFailure("Token is expired, Please login again")
-                    false
+                    onAuthenticationFailure(it.message ?: "Token Expired!")
                 }
             )
             true
