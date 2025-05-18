@@ -157,13 +157,15 @@ private fun SignInScreenContent(
                         .heightIn(max = 45.dp),
                     enabled = state.canSignIn && !state.isLoading
                 ) {
-                    if (state.isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(20.dp),
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
-                    } else {
-                        Text(text = stringResource(Res.string.sign_in))
+                    AnimatedContent(state.isLoading) {
+                        if (state.isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        } else {
+                            Text(text = stringResource(Res.string.sign_in))
+                        }
                     }
                 }
 
