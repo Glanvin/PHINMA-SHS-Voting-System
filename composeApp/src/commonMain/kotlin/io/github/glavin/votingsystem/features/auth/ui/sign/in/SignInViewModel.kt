@@ -175,7 +175,7 @@ class SignInViewModel(
         }
     }
 
-    private fun clearFields() {
+    private fun resetCredentials() {
         _state.update {
             it.copy(
                 email = "",
