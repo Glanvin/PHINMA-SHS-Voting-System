@@ -156,9 +156,17 @@ class SignInViewModel(
         }
     }
 
-    private fun isValidEmail(email: String): Boolean {
-        val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
-        return emailRegex.toRegex().matches(email)
+    private fun isEmailFormattedCorrectly(email: String): Pair<Boolean, String> {
+        if(!emailRegex.matches(email)) {
+            return Pair(false, "Please Enter an valid Email")
+        }
+
+        val domain = email.substringAfterLast('@', "")
+        if(domains.isNotEmpty() && domain !in domains) {
+            return Pair(false, "This domain isn't registered please contact the administrator")
+        }
+
+        return Pair(true, "")
     }
 
     private fun togglePasswordVisibility() {
