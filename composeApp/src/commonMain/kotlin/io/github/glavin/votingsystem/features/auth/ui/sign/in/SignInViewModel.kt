@@ -119,10 +119,40 @@ class SignInViewModel(
                     onAuthenticationFailure(it.message ?: "Token Expired!")
                 }
             )
-            true
-        } catch (e: Exception) {
-            onAuthenticationFailure(message = e.message ?: "An unexpected error occurred")
-            false
+        }.onFailure {
+            onAuthenticationFailure(it.message ?: "An unexpected error occurred!")
+        }
+        return _state.value.isAuthenticated
+    }
+
+    @OptIn(FlowPreview::class)
+    private fun observeEmailChanges() {
+        viewModelScope.launch {
+            state
+                .map { it.email }
+                .distinctUntilChanged()
+                .debounce(1.seconds)
+                .collect { email ->
+                    when {
+                        email.isEmpty() -> _state.update { it.copy(isEmailInvalid = false) }
+                        email.length <= 2 && !email.contains('@', true) -> {
+                            _state.update { it.copy(isEmailInvalid = true) }
+                            snackbarController.sendEvent(SnackbarEvent("Email to short"))
+                        }
+                        else -> {
+                            emailJob?.cancel()
+                            emailJob = checkEmail(email)
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun checkEmail(email: String) = viewModelScope.launch {
+        val (isValid, errorMessage) = isEmailFormattedCorrectly(email)
+        if (!isValid) {
+            _state.update { it.copy(isEmailInvalid = !isValid) }
+            snackbarController.sendEvent(SnackbarEvent(message = errorMessage))
         }
     }
 
