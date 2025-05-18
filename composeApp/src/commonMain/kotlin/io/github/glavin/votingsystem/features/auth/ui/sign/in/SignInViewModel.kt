@@ -186,7 +186,7 @@ class SignInViewModel(
 
     private suspend fun onAuthenticationSuccess(auth: Auth) {
         _state.update { it.copy(isLoading = false, isAuthenticated = true) }
-        getUser(auth).fold(
+        retrieveUserProfile(auth).fold(
             onSuccess = {
                 val firstName = it.firstName.split(" ")[0]
                 snackbarController.sendEvent(
