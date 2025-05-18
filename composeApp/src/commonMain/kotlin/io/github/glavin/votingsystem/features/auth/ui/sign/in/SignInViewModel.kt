@@ -106,11 +106,14 @@ class SignInViewModel(
     }
 
     private suspend fun signInWithToken(sessionToken: String): Boolean {
-        return try {
-            repository.signInWithToken(sessionToken).fold(
-                onSuccess = { newToken ->
-                    dataStoreRepository.saveSessionToken(session = newToken.toString())
-                    true
+        kotlin.runCatching {
+            repository.signInWithToken(sessionToken)
+        }.onSuccess { result ->
+            result.fold(
+                onSuccess = { auth ->
+                    dataStoreRepository.saveSessionToken(auth.sessionToken)
+                    snackbarController.sendEvent(SnackbarEvent("Successfully Signed In!"))
+                    onAuthenticationSuccess(auth)
                 },
                 onFailure = {
                     onAuthenticationFailure("Token is expired, Please login again")
