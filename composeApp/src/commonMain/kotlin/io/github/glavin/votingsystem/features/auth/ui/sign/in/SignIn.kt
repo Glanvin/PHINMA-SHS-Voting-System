@@ -155,7 +155,7 @@ private fun SignInScreenContent(
                     modifier = Modifier
                         .width(155.dp)
                         .heightIn(max = 45.dp),
-                    enabled = state.canSignIn && !state.isLoading
+                    enabled = !state.isLoading && state.email.isNotBlank() && state.password.isNotBlank()
                 ) {
                     AnimatedContent(state.isLoading) {
                         if (state.isLoading) {
