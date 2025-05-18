@@ -210,7 +210,7 @@ class SignInViewModel(
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    private suspend fun getUser(auth: Auth): Result<UserProfile> {
+    private suspend fun retrieveUserProfile(auth: Auth): Result<UserProfile> {
         return kotlin.runCatching {
             repository.getUserProfile(auth.id).getOrThrow()
         }.fold(
