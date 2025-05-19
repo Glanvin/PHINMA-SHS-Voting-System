@@ -84,7 +84,7 @@ class SignInViewModel(
                         _event.send(SignInAction.OnNavigateNext)
                     },
                     onFailure = {
-                        snackbarController.sendEvent(SnackbarEvent("Invalid Credentials!"))
+                        onAuthenticationFailure("Invalid Credentials")
                     }
                 )
             }.onFailure {
