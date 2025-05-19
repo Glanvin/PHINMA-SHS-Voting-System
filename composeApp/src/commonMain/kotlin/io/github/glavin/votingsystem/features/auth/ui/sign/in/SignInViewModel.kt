@@ -79,7 +79,6 @@ class SignInViewModel(
                 result.fold(
                     onSuccess = { auth ->
                         dataStoreRepository.saveSessionToken(auth.sessionToken)
-                        snackbarController.sendEvent(SnackbarEvent("Successfully Signed In!"))
                         onAuthenticationSuccess(auth)
                         _event.send(SignInAction.OnNavigateNext)
                     },
