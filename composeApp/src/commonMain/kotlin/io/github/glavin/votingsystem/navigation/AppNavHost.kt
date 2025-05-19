@@ -24,7 +24,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun AppGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Graphs.Auth,
+        startDestination = Graphs.Home,
     ) {
         authNavigation(navController)
         homeNavigation(navController)
@@ -43,11 +43,14 @@ private fun NavGraphBuilder.authNavigation(navController: NavHostController) {
                 viewModel,
                 onSuccess = {
                     navController.navigate(Graphs.Home) {
+                        launchSingleTop = true
                         popUpTo(Graphs.Auth) { inclusive = true }
                     }
                 },
                 onForgetPassword = {
-                    navController.navigate(Destinations.ForgotPassword)
+                    navController.navigate(Destinations.ForgotPassword) {
+                        launchSingleTop = true
+                    }
                 }
             )
         }
