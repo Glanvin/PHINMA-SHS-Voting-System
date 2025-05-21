@@ -14,6 +14,8 @@ import io.github.glavin.votingsystem.features.auth.ui.sign.`in`.SignInScreenRoot
 import io.github.glavin.votingsystem.features.auth.ui.sign.`in`.SignInViewModel
 import io.github.glavin.votingsystem.features.auth.ui.verification.forgot.password.ForgotPasswordRoot
 import io.github.glavin.votingsystem.features.auth.ui.verification.forgot.password.ForgotPasswordViewModel
+import io.github.glavin.votingsystem.features.auth.ui.verification.id.SchoolIDRoot
+import io.github.glavin.votingsystem.features.auth.ui.verification.id.SchoolIDViewModel
 import io.github.glavin.votingsystem.features.home.ui.HomeScreenRoot
 import io.github.glavin.votingsystem.features.home.ui.HomeViewModel
 import io.github.glavin.votingsystem.features.voting.ui.list.CandidateListScreenRoot
@@ -24,7 +26,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun AppGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Graphs.Home,
+        startDestination = Graphs.Auth,
     ) {
         authNavigation(navController)
         homeNavigation(navController)
@@ -42,9 +44,9 @@ private fun NavGraphBuilder.authNavigation(navController: NavHostController) {
             SignInScreenRoot(
                 viewModel,
                 onSuccess = {
-                    navController.navigate(Graphs.Home) {
+                    navController.navigate(Destinations.SchoolIdVerification) {
                         launchSingleTop = true
-                        popUpTo(Graphs.Auth) { inclusive = true }
+                        popUpTo(Destinations.SignIn) { inclusive = true }
                     }
                 },
                 onForgetPassword = {
@@ -53,6 +55,29 @@ private fun NavGraphBuilder.authNavigation(navController: NavHostController) {
                     }
                 }
             )
+        }
+
+        composable<Destinations.SchoolIdVerification> {
+            val viewModel = koinViewModel<SchoolIDViewModel>()
+            SchoolIDRoot(
+                viewModel,
+                onSuccess = {
+                    navController.navigate(Graphs.Home) {
+                        launchSingleTop = true
+                        popUpTo<Graphs.Auth>() { inclusive = true }
+                    }
+                },
+                onHasIncompleteProfile = {
+                    navController.navigate(Destinations.StudentProfileForm) {
+                        launchSingleTop = true
+                        popUpTo<Graphs.Auth>() { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable<Destinations.StudentProfileForm> {
+
         }
 
         composable<Destinations.ForgotPassword> {
@@ -77,7 +102,7 @@ private fun NavGraphBuilder.homeNavigation(navController: NavHostController) {
             }
         }
 
-        composable<Destinations.Voting> {
+        composable<Destinations.Vote> {
             val viewModel = koinViewModel<CandidateListViewModel>()
             HomePanel(
                 accountType = AccountType.ADMIN,

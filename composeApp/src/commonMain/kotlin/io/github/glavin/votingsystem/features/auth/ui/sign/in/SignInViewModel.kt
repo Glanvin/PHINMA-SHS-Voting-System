@@ -153,8 +153,10 @@ class SignInViewModel(
     private fun checkEmail(email: String) = viewModelScope.launch {
         val (isValid, errorMessage) = isEmailFormattedCorrectly(email)
         if (!isValid) {
-            _state.update { it.copy(isEmailInvalid = !isValid) }
+            _state.update { it.copy(isEmailInvalid = true) }
             snackbarController.sendEvent(SnackbarEvent(message = errorMessage))
+        } else {
+            _state.update { it.copy(isEmailInvalid = false) }
         }
     }
 

@@ -144,7 +144,7 @@ enum class NavigationItems(
     val unSelectedIcon: ImageVector
 ) {
     HOME("Home", Destinations.Home, Icons.Filled.Home, Icons.Outlined.Home),
-    VOTING("Vote", Destinations.Voting, Icons.Filled.Ballot, Icons.Outlined.Ballot),
+    VOTING("Vote", Destinations.Vote, Icons.Filled.Ballot, Icons.Outlined.Ballot),
     NOTIFICATIONS(
         "Updates",
         Destinations.Notification,

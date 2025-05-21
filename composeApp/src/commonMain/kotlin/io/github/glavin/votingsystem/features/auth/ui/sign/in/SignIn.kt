@@ -35,8 +35,8 @@ import chiro.composeapp.generated.resources.app_name
 import chiro.composeapp.generated.resources.compose_multiplatform
 import chiro.composeapp.generated.resources.forgot_password
 import chiro.composeapp.generated.resources.sign_in
-import io.github.glavin.votingsystem.core.ui.SnackbarController
 import io.github.glavin.votingsystem.core.ui.ObserveAsEvents
+import io.github.glavin.votingsystem.core.ui.SnackbarController
 import io.github.glavin.votingsystem.features.auth.ui.components.DynamicLayout
 import io.github.glavin.votingsystem.features.auth.ui.components.EmailOutlinedTextField
 import io.github.glavin.votingsystem.features.auth.ui.components.PasswordOutlinedTextField
@@ -157,8 +157,8 @@ private fun SignInScreen(
                         .heightIn(max = 45.dp),
                     enabled = enabled
                 ) {
-                    AnimatedContent(state.isLoading) {
-                        if (state.isLoading) {
+                    AnimatedContent(state.isLoading) { loading ->
+                        if (loading) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(20.dp),
                                 color = MaterialTheme.colorScheme.onPrimary

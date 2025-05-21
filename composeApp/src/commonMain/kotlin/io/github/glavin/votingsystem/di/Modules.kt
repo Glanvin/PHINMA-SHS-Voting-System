@@ -13,6 +13,7 @@ import io.github.glavin.votingsystem.features.auth.domain.UserRepository
 import io.github.glavin.votingsystem.features.auth.ui.sign.`in`.SignInViewModel
 import io.github.glavin.votingsystem.features.auth.ui.sign.out.SignOutViewModel
 import io.github.glavin.votingsystem.features.auth.ui.verification.forgot.password.ForgotPasswordViewModel
+import io.github.glavin.votingsystem.features.auth.ui.verification.id.SchoolIDViewModel
 import io.github.glavin.votingsystem.features.home.ui.HomeViewModel
 import io.github.glavin.votingsystem.features.voting.ui.list.CandidateListViewModel
 import org.koin.core.module.Module
@@ -38,4 +39,5 @@ val sharedModule = module {
     viewModelOf(::ForgotPasswordViewModel)
     viewModelOf(::HomeViewModel)
     viewModelOf(::SignOutViewModel)
+    viewModelOf(::SchoolIDViewModel)
 }
