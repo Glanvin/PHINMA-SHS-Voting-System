@@ -14,7 +14,6 @@ fun UserProfileDto.toUserProfile(): UserProfile {
         gradeLevel = gradeLevel,
         accountType = accountType,
         hasVoted = hasVoted,
-        imageUrl = imageUrl,
         strand = strand,
         verified = verified,
     )

@@ -49,6 +49,8 @@ fun SchoolIDScreen(
     onAction: (SchoolIDAction) -> Unit,
 ) {
 
+    val enabled = !state.isLoading && state.schoolId.isNotBlank() && !state.isFormatInvalid
+
     LaunchedEffect(event) {
         when (event) {
             is SchoolIDAction.NewVoter -> onHasIncompleteProfile()
@@ -66,7 +68,7 @@ fun SchoolIDScreen(
 
         OutlinedTextField(
             modifier = Modifier
-                .width(355.dp)
+                .width(180.dp)
                 .heightIn(55.dp),
             value = state.schoolId,
             onValueChange = { onAction(SchoolIDAction.SchoolIdNumber(it)) },
@@ -86,7 +88,8 @@ fun SchoolIDScreen(
         )
 
         Button(
-            onClick = { onAction(SchoolIDAction.Submit) }
+            onClick = { onAction(SchoolIDAction.Submit) },
+            enabled = enabled
         ) {
             if (state.isLoading) {
                 CircularProgressIndicator(

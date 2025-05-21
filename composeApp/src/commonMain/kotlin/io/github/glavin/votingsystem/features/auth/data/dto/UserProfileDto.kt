@@ -15,7 +15,6 @@ data class UserProfileDto(
     @SerialName("school_id") val schoolId: String,
     @SerialName("grade_level") val gradeLevel: Int,
     @SerialName("strand") val strand: String,
-    @SerialName("profile_img") val imageUrl: String,
     @SerialName("has_voted") val hasVoted: Boolean,
     @SerialName("access_level") val accountType: AccountType,
     @SerialName("verified") val verified: Boolean

@@ -11,7 +11,6 @@ data class UserProfile(
     val lastName: String,
     val gradeLevel: Int,
     val strand: String,
-    val imageUrl: String,
     val hasVoted: Boolean,
     val accountType: AccountType,
     val verified: Boolean

@@ -16,11 +16,8 @@ sealed class Destinations {
     @Serializable data object SignIn : Destinations()
     @Serializable data object ForgotPassword : Destinations()
     @Serializable data object Home : Destinations()
-    @Serializable
-    data object Vote : Destinations()
+    @Serializable data object Vote : Destinations()
     @Serializable data object Notification : Destinations()
-    @Serializable
-    data object SchoolIdVerification : Destinations()
-    @Serializable
-    data object StudentProfileForm : Destinations()
+    @Serializable data object SchoolIdVerification : Destinations()
+    @Serializable data object StudentProfileForm : Destinations()
 }
